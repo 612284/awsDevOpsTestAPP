@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: latest
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - apt-get update -y
+      - apt-get install -y python3-pip
+      - pip3 install awscli --upgrade
+      - apt-get install -y docker.io
+      - docker --version
+      - $(aws ecr get-login --no-include-email --region <YOUR_REGION>) 
+  build:
+    commands:
+      - echo Building the Docker image...
+      - git clone https://github.com/612284/awsDevOpsTestAPP.git
+      - cd awsDevOpsTestAPP
+      - docker build -t flask-app .
+      - docker tag flask-app:latest <YOUR_ECR_REPO_URI>:latest
+  post_build:
+    commands:
+      - echo Pushing the Docker image to ECR...
+      - docker push <YOUR_ECR_REPO_URI>:latest
+      - echo Docker image pushed to ECR
