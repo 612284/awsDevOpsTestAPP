@@ -11,13 +11,9 @@ phases:
       - apt-get update -y
       - apt-get install -y python3-pip
       - pip3 install awscli --upgrade
-      - apt install -y apt-transport-https ca-certificates curl software-properties-common
-      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-      - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-      - sudo apt update
-      - apt install -y docker-ce
+      - apt-get install -y docker.io
       - docker --version
-      - $(aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 851725412981.dkr.ecr.eu-central-1.amazonaws.com) 
+      - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 851725412981.dkr.ecr.eu-central-1.amazonaws.com
   build:
     commands:
       - echo Building the Docker image...
